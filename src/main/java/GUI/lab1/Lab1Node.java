@@ -3,12 +3,12 @@ package GUI.lab1;
 import GUI.LabNode;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+
+import java.util.Random;
 
 /**
  * Created by slavik on 08.09.17.
@@ -16,14 +16,30 @@ import javafx.scene.layout.VBox;
 public class Lab1Node extends LabNode {
 
     private int lengthMatrixX;
+    private TextField[][] matrixTextField = new TextField[21][21];
+
 
     @Override
     protected void draw() {
         VBox rootVBox = new VBox();
-        rootVBox.getChildren().addAll(getVBoxForSizeMatrix());
+        rootVBox.getChildren().addAll(getVBoxForSizeMatrix(),getDataFromFile());
 
 
         node = rootVBox;
+    }
+
+    private Node getDataFromFile() {
+        ColumnConstraints columnConstraints0 = new ColumnConstraints(15);
+
+        Button dataFromFileButton = new Button("Получить данные из файла");
+
+        GridPane dataFromFileGridPane = new GridPane();
+        dataFromFileGridPane.add(dataFromFileButton,1,1);
+        RowConstraints rowConstraints0 = new RowConstraints(7);
+
+        dataFromFileGridPane.getColumnConstraints().add(columnConstraints0);
+        dataFromFileGridPane.getRowConstraints().add(rowConstraints0);
+        return dataFromFileGridPane;
     }
 
     private Node getVBoxForSizeMatrix() {
@@ -55,7 +71,7 @@ public class Lab1Node extends LabNode {
             try {
                 sizeMatrixVbox.getChildren().remove(1);
             } catch (Exception e) {
-                System.out.println("YEE");
+//                System.out.println("YEE");
             }
             try {
                 this.lengthMatrixX = Integer.parseInt(textFieldX.getText());
@@ -63,7 +79,9 @@ public class Lab1Node extends LabNode {
                     throw new NumberFormatException();
                 }
                 messageLabel.setText("");
-                sizeMatrixVbox.getChildren().add(getMatrix());
+                HBox sizeMatrixHBox = new HBox();
+                sizeMatrixHBox.getChildren().addAll(getMatrix(), getRandomMatrixData());
+                sizeMatrixVbox.getChildren().addAll(sizeMatrixHBox);
             } catch (NumberFormatException e) {
                 messageLabel.setText("   " + "Размер матрицы неверен");
                 messageLabel.setStyle("-fx-text-fill: red;");
@@ -78,13 +96,46 @@ public class Lab1Node extends LabNode {
         return sizeMatrixVbox;
     }
 
+    private Node getRandomMatrixData() {
+        ColumnConstraints columnConstraints0 = new ColumnConstraints(5);
+        RowConstraints rowConstraints0 = new RowConstraints(15);
+
+
+
+        GridPane randomMatrixDataGridPane = new GridPane();
+
+        Button randomButton = new Button("Заполнить случайными числами");
+        randomMatrixDataGridPane.add(randomButton,1,1);
+        randomButton.setOnMouseClicked(mouseEvent -> {
+            for (int i = 1; i < lengthMatrixX+1 ; i++) {
+                for (int j = 1; j < lengthMatrixX+1; j++) {
+                    matrixTextField[i][j].setText(Integer.toString((int)(Math.random()*30)));
+                }
+            }
+        });
+
+        randomMatrixDataGridPane.getColumnConstraints().add(columnConstraints0);
+        randomMatrixDataGridPane.getRowConstraints().add(rowConstraints0);
+
+        return randomMatrixDataGridPane;
+    }
+
     private Node getMatrix() {
         GridPane matrixGridPane = new GridPane();
 
-        TextField[][] matrixTextField = new TextField[20][20];
+        for (int i = 1; i < lengthMatrixX+1; i++) {
+            matrixGridPane.add(new Label("  x"+i),i,0);
+        }
 
-        for (int i = 0; i < lengthMatrixX; i++) {
-            for (int j = 0; j < lengthMatrixX; j++) {
+        for (int i = 1; i < lengthMatrixX+1; i++) {
+            Label columnLabel = new Label(" "+Integer.toString(i));
+            columnLabel.setMinWidth(25);
+            columnLabel.setContentDisplay(ContentDisplay.CENTER);
+            matrixGridPane.add(columnLabel,0,i);
+        }
+
+        for (int i = 1; i < lengthMatrixX+1; i++) {
+            for (int j = 1; j < lengthMatrixX+1; j++) {
                 matrixTextField[i][j] = new TextField("0");
                 matrixTextField[i][j].setMaxWidth(40);
                 matrixGridPane.add(matrixTextField[i][j], i, j);
