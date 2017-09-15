@@ -1,13 +1,12 @@
 package GUI;
 
-import GUI.LabNode;
 import javafx.scene.Node;
 
 class BackEnd {
-    private LabNode node;
+    private LabsNode node;
 
-    BackEnd(LabNode labNode) {
-        this.node = labNode;
+    BackEnd(LabsNode labsNode) {
+        this.node = labsNode;
     }
 
     Node getNode() {

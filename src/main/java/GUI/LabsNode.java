@@ -2,10 +2,10 @@ package GUI;
 
 import javafx.scene.Node;
 
-public abstract class LabNode {
+public abstract class LabsNode {
     protected Node node;
 
-    public LabNode() {
+    public LabsNode() {
         draw();
     }
 
