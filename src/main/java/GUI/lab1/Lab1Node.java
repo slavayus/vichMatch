@@ -2,11 +2,17 @@ package GUI.lab1;
 
 import GUI.LabsNode;
 import algorithms.lab1.Gauss;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by slavik on 08.09.17.
@@ -17,25 +23,41 @@ public class Lab1Node extends LabsNode {
     private TextField[][] matrixTextField = new TextField[25][25];
     private ComboBox<String> comboBox = new ComboBox<>();
     private Label messageLabel;
+    private TextField[] answersTextField = new TextField[25];
+    private TextField[] errorsTextField = new TextField[25];
 
 
     @Override
     protected void draw() {
         VBox rootVBox = new VBox();
-        rootVBox.getChildren().addAll(getVBoxForSizeMatrix(), getDataFromFile());
+        rootVBox.getChildren().addAll(getVBoxForSizeMatrix());
 
 
         node = rootVBox;
     }
 
     private Node getDataFromFile() {
-        ColumnConstraints columnConstraints0 = new ColumnConstraints(15);
+        ColumnConstraints columnConstraints0 = new ColumnConstraints(7);
 
         Button dataFromFileButton = new Button("Получить данные из файла");
 
+        dataFromFileButton.setOnMouseClicked(mouseEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(new Stage());
+            try (Scanner scanner = new Scanner(file)){
+                    for (int i = 1; i < lengthMatrixX + 1; i++) {
+                        for (int j = 1; j < lengthMatrixX + 2; j++) {
+                            matrixTextField[j][i].setText(scanner.hasNext()?scanner.next():"");
+                        }
+                    }
+            } catch (FileNotFoundException e) {
+            }
+        });
+
+
         GridPane dataFromFileGridPane = new GridPane();
         dataFromFileGridPane.add(dataFromFileButton, 1, 1);
-        RowConstraints rowConstraints0 = new RowConstraints(7);
+        RowConstraints rowConstraints0 = new RowConstraints(10);
 
         dataFromFileGridPane.getColumnConstraints().add(columnConstraints0);
         dataFromFileGridPane.getRowConstraints().add(rowConstraints0);
@@ -70,6 +92,9 @@ public class Lab1Node extends LabsNode {
         button.setOnMouseClicked(mouseEvent -> {
             try {
                 sizeMatrixVBox.getChildren().remove(1);
+                sizeMatrixVBox.getChildren().remove(1);
+                sizeMatrixVBox.getChildren().remove(1);
+                sizeMatrixVBox.getChildren().remove(1);
             } catch (Exception e) {
 //                System.out.println("YEE");
             }
@@ -80,11 +105,11 @@ public class Lab1Node extends LabsNode {
                 }
                 messageLabel.setText("");
 
-                VBox determinantVBox = new VBox(getRandomMatrixData(), getResolveMatrix(), getMethod());
+                VBox determinantVBox = new VBox(getDataFromFile(), getRandomMatrixData(), getResolveMatrix(), getMethod());
 
                 HBox sizeMatrixHBox = new HBox();
                 sizeMatrixHBox.getChildren().addAll(getMatrix(), determinantVBox);
-                sizeMatrixVBox.getChildren().addAll(sizeMatrixHBox);
+                sizeMatrixVBox.getChildren().addAll(sizeMatrixHBox, getAnswers());
             } catch (NumberFormatException e) {
                 messageLabel.setText("   " + "Размер матрицы неверен");
                 messageLabel.setStyle("-fx-text-fill: red;");
@@ -109,7 +134,7 @@ public class Lab1Node extends LabsNode {
         GridPane resolveMatrixGridPane = new GridPane();
         resolveMatrixGridPane.add(new Label("Определитель матрицы: "), 1, 1);
         Label determinantMessage = new Label("No");
-        resolveMatrixGridPane.add(determinantMessage, 2, 1);
+        resolveMatrixGridPane.add(determinantMessage, 1, 2);
 
         Button resolveMatrixButton = new Button("Вычислить определитель");
         resolveMatrixButton.setOnMouseClicked(mouseEvent -> {
@@ -121,11 +146,23 @@ public class Lab1Node extends LabsNode {
                         gauss.calculate();
                         gauss.soutMatr();
                         HashMap<Integer, Double> unknowns = gauss.getUnknowns();
-                        if(unknowns == null){
-                            messageLabel.setText("  Не удалось посчитать определитель");
-                            messageLabel.setStyle("-fx-text-fill: red;");
-                        }else {
-                           unknowns.forEach((integer, aDouble) -> System.out.println(aDouble));
+                        if (unknowns == null) {
+                            determinantMessage.setText("  Не удалось посчитать определитель");
+                            determinantMessage.setStyle("-fx-text-fill: red;");
+                        } else {
+                            determinantMessage.setText(gauss.getDeterminant());
+
+                            Map<Integer, Double> ordered = new HashMap<>();
+                            int j = -1;
+                            for (int i = unknowns.size() - 1; i >= 0; i--) {
+                                ordered.put(++j, unknowns.get(i));
+                            }
+
+                            ordered.forEach((integer, aDouble) -> answersTextField[integer + 1].setText(aDouble.toString()));
+                            ordered.forEach((integer, aDouble) -> System.out.println(aDouble));
+                            System.out.println();
+                            HashMap<Integer, Double> errors = gauss.getErrors(ordered);
+                            errors.forEach((integer, aDouble) -> errorsTextField[integer + 1].setText(aDouble.toString()));
                         }
                         break;
                     case "Гаусса с выбором главного элемента":
@@ -142,7 +179,7 @@ public class Lab1Node extends LabsNode {
         });
 
 
-        resolveMatrixGridPane.add(resolveMatrixButton, 1, 2);
+        resolveMatrixGridPane.add(resolveMatrixButton, 1, 3);
 
         resolveMatrixGridPane.getColumnConstraints().addAll(columnConstraints0, columnConstraints1);
         resolveMatrixGridPane.getRowConstraints().addAll(rowConstraints0, rowConstraints1);
@@ -232,6 +269,7 @@ public class Lab1Node extends LabsNode {
     }
 
     private Node getMethod() {
+        comboBox = new ComboBox<>();
         comboBox.getItems().addAll(
                 "Гаусса",
                 "Гаусса с выбором главного элемента",
@@ -259,5 +297,35 @@ public class Lab1Node extends LabsNode {
         return ComboBoxGridPane;
 
 
+    }
+
+    private Node getAnswers() {
+
+        GridPane answersGridPane = new GridPane();
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            answersGridPane.add(new Label("  x" + i), i, 1);
+        }
+
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            answersTextField[i] = new TextField("0");
+            answersTextField[i].setMaxWidth(40);
+            answersGridPane.add(answersTextField[i], i, 2);
+        }
+
+        GridPane errorsGridPane = new GridPane();
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            errorsGridPane.add(new Label("  " + i), i, 1);
+        }
+
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            errorsTextField[i] = new TextField("0");
+            errorsTextField[i].setMaxWidth(40);
+            errorsGridPane.add(errorsTextField[i], i, 2);
+        }
+
+        VBox vBoxAnswers = new VBox();
+        vBoxAnswers.getChildren().addAll(new Label("Столбец неизвестных:"), answersGridPane, new Label("Столбец невязок:"), errorsGridPane);
+        vBoxAnswers.setPadding(new Insets(5, 0, 0, 25));
+        return vBoxAnswers;
     }
 }

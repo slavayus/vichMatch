@@ -3,14 +3,30 @@ package algorithms.lab1;
 import javafx.scene.control.TextField;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Gauss<T extends Number> {
     private final int lengthMatrixX;
     private final TextField[][] matrixTextField;
+    private int[][] dataClone = new int[25][25];
+    private HashMap<Integer, Double> dataAnswers = new HashMap<>();
 
     public Gauss(TextField[][] matrixTextField, int lengthMatrixX) {
         this.matrixTextField = matrixTextField;
         this.lengthMatrixX = lengthMatrixX;
+        cloneData();
+    }
+
+    private void cloneData() {
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            for (int j = 1; j < lengthMatrixX + 1; j++) {
+                this.dataClone[j - 1][i - 1] = Integer.parseInt(matrixTextField[i][j].getText());
+            }
+        }
+
+        for (int i = 1; i < lengthMatrixX + 1; i++) {
+            dataAnswers.put(i - 1, Double.parseDouble(matrixTextField[lengthMatrixX + 1][i].getText()));
+        }
     }
 
     public void calculate() {
@@ -87,7 +103,7 @@ public class Gauss<T extends Number> {
         for (int j = 0; j <= dataJ; j++) {
             sum += data[i][j];
         }
-        answer-= sum;
+        answer -= sum;
         return answer / unknownsNotCalculated;
     }
 
@@ -105,5 +121,28 @@ public class Gauss<T extends Number> {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public HashMap<Integer, Double> getErrors(Map<Integer, Double> unknowns) {
+        HashMap<Integer, Double> errors = new HashMap<>();
+        for (int i = 0; i < lengthMatrixX; i++) {
+            int sum = 0;
+            for (int j = 0; j < lengthMatrixX; j++) {
+                sum += dataClone[i][j] * unknowns.get(j);
+            }
+            errors.put(i, sum - dataAnswers.get(i));
+        }
+        return errors;
+    }
+
+    public String getDeterminant() {
+        double determinant = Double.parseDouble(matrixTextField[1][1].getText());
+        System.out.println(determinant);
+        for (int i = 2; i < lengthMatrixX + 1; i++) {
+            System.out.println(matrixTextField[i][i].getText());
+            determinant *= Double.parseDouble(matrixTextField[i][i].getText());
+        }
+        System.out.println();
+        return String.valueOf(determinant);
     }
 }
