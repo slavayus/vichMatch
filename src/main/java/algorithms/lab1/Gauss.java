@@ -8,7 +8,7 @@ import java.util.Map;
 public class Gauss<T extends Number> {
     private final int lengthMatrixX;
     private final TextField[][] matrixTextField;
-    private int[][] dataClone = new int[25][25];
+    private double[][] dataClone = new double[25][25];
     private HashMap<Integer, Double> dataAnswers = new HashMap<>();
 
     public Gauss(TextField[][] matrixTextField, int lengthMatrixX) {
@@ -20,7 +20,7 @@ public class Gauss<T extends Number> {
     private void cloneData() {
         for (int i = 1; i < lengthMatrixX + 1; i++) {
             for (int j = 1; j < lengthMatrixX + 1; j++) {
-                this.dataClone[j - 1][i - 1] = Integer.parseInt(matrixTextField[i][j].getText());
+                this.dataClone[j - 1][i - 1] = Double.parseDouble(matrixTextField[i][j].getText());
             }
         }
 

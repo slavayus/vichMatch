@@ -2,6 +2,7 @@ package GUI.lab1;
 
 import GUI.LabsNode;
 import algorithms.lab1.Gauss;
+import algorithms.lab1.Zeydel;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -10,9 +11,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by slavik on 08.09.17.
@@ -25,7 +24,8 @@ public class Lab1Node extends LabsNode {
     private Label messageLabel;
     private TextField[] answersTextField = new TextField[25];
     private TextField[] errorsTextField = new TextField[25];
-
+    private DataFromFile dataFromFile = new DataFromFile();
+    private TextField epsilon = new TextField("0.0001");
 
     @Override
     protected void draw() {
@@ -34,34 +34,6 @@ public class Lab1Node extends LabsNode {
 
 
         node = rootVBox;
-    }
-
-    private Node getDataFromFile() {
-        ColumnConstraints columnConstraints0 = new ColumnConstraints(7);
-
-        Button dataFromFileButton = new Button("Получить данные из файла");
-
-        dataFromFileButton.setOnMouseClicked(mouseEvent -> {
-            FileChooser fileChooser = new FileChooser();
-            File file = fileChooser.showOpenDialog(new Stage());
-            try (Scanner scanner = new Scanner(file)){
-                    for (int i = 1; i < lengthMatrixX + 1; i++) {
-                        for (int j = 1; j < lengthMatrixX + 2; j++) {
-                            matrixTextField[j][i].setText(scanner.hasNext()?scanner.next():"");
-                        }
-                    }
-            } catch (FileNotFoundException e) {
-            }
-        });
-
-
-        GridPane dataFromFileGridPane = new GridPane();
-        dataFromFileGridPane.add(dataFromFileButton, 1, 1);
-        RowConstraints rowConstraints0 = new RowConstraints(10);
-
-        dataFromFileGridPane.getColumnConstraints().add(columnConstraints0);
-        dataFromFileGridPane.getRowConstraints().add(rowConstraints0);
-        return dataFromFileGridPane;
     }
 
     private Node getVBoxForSizeMatrix() {
@@ -105,7 +77,7 @@ public class Lab1Node extends LabsNode {
                 }
                 messageLabel.setText("");
 
-                VBox determinantVBox = new VBox(getDataFromFile(), getRandomMatrixData(), getResolveMatrix(), getMethod());
+                VBox determinantVBox = new VBox(dataFromFile.getButton(matrixTextField, lengthMatrixX, epsilon), getRandomMatrixData(), getResolveMatrix(), getMethod());
 
                 HBox sizeMatrixHBox = new HBox();
                 sizeMatrixHBox.getChildren().addAll(getMatrix(), determinantVBox);
@@ -132,9 +104,20 @@ public class Lab1Node extends LabsNode {
 
 
         GridPane resolveMatrixGridPane = new GridPane();
-        resolveMatrixGridPane.add(new Label("Определитель матрицы: "), 1, 1);
+        Label information = new Label();
+        resolveMatrixGridPane.add(information, 1, 1);
         Label determinantMessage = new Label("No");
         resolveMatrixGridPane.add(determinantMessage, 1, 2);
+
+
+        resolveMatrixGridPane.add(new Label("Введите точность: "), 1, 4);
+        epsilon.setMaxWidth(100);
+        resolveMatrixGridPane.add(epsilon, 2, 4);
+
+        resolveMatrixGridPane.add(new Label("Диагональ: "), 1, 5);
+        Label diagonalMessage = new Label("");
+        resolveMatrixGridPane.add(diagonalMessage, 2, 5);
+
 
         Button resolveMatrixButton = new Button("Вычислить определитель");
         resolveMatrixButton.setOnMouseClicked(mouseEvent -> {
@@ -142,6 +125,7 @@ public class Lab1Node extends LabsNode {
                 String method = comboBox.getValue();
                 switch (method) {
                     case "Гаусса":
+                        information.setText("Определитель матрицы: ");
                         Gauss<Double> gauss = new Gauss<>(matrixTextField, lengthMatrixX);
                         gauss.calculate();
                         gauss.soutMatr();
@@ -170,6 +154,24 @@ public class Lab1Node extends LabsNode {
                     case "Простых итераций":
                         break;
                     case "Гаусса-Зейделя":
+                        information.setText("Число итераций: ");
+                        Zeydel zeydel = new Zeydel(matrixTextField, lengthMatrixX);
+                        try {
+                            double[] answers = zeydel.findSolution(Double.parseDouble(epsilon.getText()));
+
+                            for (int i = 0; i < lengthMatrixX; i++) {
+                                answersTextField[i + 1].setText(String.valueOf(answers[i]));
+                            }
+
+                            HashMap<Integer, Double> errors = zeydel.getErrors(answers, matrixTextField);
+                            errors.forEach((integer, aDouble) -> errorsTextField[integer + 1].setText(aDouble.toString()));
+
+                            determinantMessage.setText(String.valueOf(String.valueOf(zeydel.getNumberOfIteration())));
+                            diagonalMessage.setText(zeydel.getDiagonal() ? "Да" : "Нет");
+                        } catch (NumberFormatException e) {
+                            determinantMessage.setText("Не удалось посчитать");
+                            determinantMessage.setStyle("-fx-text-fill: red;");
+                        }
                         break;
                 }
 
@@ -177,7 +179,6 @@ public class Lab1Node extends LabsNode {
 
 
         });
-
 
         resolveMatrixGridPane.add(resolveMatrixButton, 1, 3);
 
@@ -199,7 +200,7 @@ public class Lab1Node extends LabsNode {
             }
             return true;
         } catch (Exception ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
             messageLabel.setText("  Данные в матрицу введены некорректно");
             messageLabel.setStyle("-fx-text-fill: red;");
             return false;
@@ -272,8 +273,8 @@ public class Lab1Node extends LabsNode {
         comboBox = new ComboBox<>();
         comboBox.getItems().addAll(
                 "Гаусса",
-                "Гаусса с выбором главного элемента",
-                "Простых итераций",
+//                "Гаусса с выбором главного элемента",
+//                "Простых итераций",
                 "Гаусса-Зейделя"
         );
         comboBox.getSelectionModel().selectFirst();
