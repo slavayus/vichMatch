@@ -1,18 +1,20 @@
 package algorithms.lab1;
 
+import GUI.lab1.InterfaceMatrixStrategy;
 import javafx.scene.control.TextField;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class Zeydel {
+public class Zeydel implements InterfaceMatrixStrategy {
 
     private final int lengthMatrixX;
+    private final double epsilon;
     private double[][] dataClone = new double[25][25];
     private int numberOfIteration;
 
-    public Zeydel(TextField[][] matrixTextField, int lengthMatrixX) {
+    public Zeydel(TextField[][] matrixTextField, int lengthMatrixX, double epsilon) {
         this.lengthMatrixX = lengthMatrixX;
+        this.epsilon = epsilon;
         transformTheInputData(matrixTextField);
     }
 
@@ -24,8 +26,8 @@ public class Zeydel {
         }
     }
 
-
-    public double[] findSolution(double epsilon) {
+    @Override
+    public double[] findSolution() {
         double error;
         int size = lengthMatrixX;
         double[] previousVariableValues = new double[size];
@@ -85,19 +87,6 @@ public class Zeydel {
         return numberOfIteration;
     }
 
-    public boolean getDiagonal() {
-        for (int i = 0; i < lengthMatrixX; i++) {
-            for (int j = 0; j < lengthMatrixX; j++) {
-                if (j != i) {
-                    if (Math.abs(dataClone[i][j]) >= Math.abs(dataClone[i][i])) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     public HashMap<Integer, Double> getErrors(double[] unknowns, TextField[][] matrixTextField) {
         HashMap<Integer, Double> dataAnswers = new HashMap<>();
         for (int i = 1; i < lengthMatrixX + 1; i++) {
@@ -113,6 +102,11 @@ public class Zeydel {
             errors.put(i, sum - dataAnswers.get(i));
         }
         return errors;
+    }
+
+    @Override
+    public double getDeterminant() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
 

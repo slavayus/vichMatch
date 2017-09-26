@@ -2,7 +2,6 @@ package GUI;
 
 import GUI.lab1.Lab1Node;
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
@@ -25,27 +24,27 @@ public class MainWindow extends Application {
         FlowPane rootFlowPane = new FlowPane();
 
 
-        rootFlowPane.getChildren().addAll(setButtons(primaryStage, rootFlowPane));
+        rootFlowPane.getChildren().addAll(setButtons(rootFlowPane));
         primaryStage.setScene(new Scene(rootFlowPane, 1200, 800));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 
 
-    private List<Button> setButtons(Stage primaryStage, FlowPane rootFlowPane) {
+    private List<Button> setButtons(FlowPane rootFlowPane) {
         List<Button> buttonList = new ArrayList<>();
+        StrategyClient strategyClient = new StrategyClient(new Lab1Node());
 
         //Height = 25
         Button buttonLab1 = new Button("lab_1");
         buttonLab1.setPrefWidth(240);
-        BackEnd backEnd = new BackEnd(new Lab1Node());
         buttonLab1.setOnMouseClicked(keyEvent -> {
             try {
                 rootFlowPane.getChildren().remove(5);
             } catch (Exception e) {
 //                e.printStackTrace();
             }
-            rootFlowPane.getChildren().add(backEnd.getNode());
+            rootFlowPane.getChildren().add(strategyClient.doDraw());
         });
         buttonList.add(buttonLab1);
 

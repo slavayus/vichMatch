@@ -7,16 +7,14 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by slavik on 08.09.17.
  */
-public class Lab1Node extends LabsNode {
+public class Lab1Node implements LabsNode {
 
     private int lengthMatrixX;
     private TextField[][] matrixTextField = new TextField[25][25];
@@ -26,14 +24,14 @@ public class Lab1Node extends LabsNode {
     private TextField[] errorsTextField = new TextField[25];
     private DataFromFile dataFromFile = new DataFromFile();
     private TextField epsilon = new TextField("0.0001");
+    private Label determinantMessage = new Label();
+    private Label diagonalMessage = new Label();
 
     @Override
-    protected void draw() {
+    public Node draw() {
         VBox rootVBox = new VBox();
         rootVBox.getChildren().addAll(getVBoxForSizeMatrix());
-
-
-        node = rootVBox;
+        return rootVBox;
     }
 
     private Node getVBoxForSizeMatrix() {
@@ -98,54 +96,39 @@ public class Lab1Node extends LabsNode {
 
     private Node getResolveMatrix() {
         ColumnConstraints columnConstraints0 = new ColumnConstraints(5);
-        ColumnConstraints columnConstraints1 = new ColumnConstraints(205);
-        RowConstraints rowConstraints0 = new RowConstraints(15);
-        RowConstraints rowConstraints1 = new RowConstraints(20);
+        RowConstraints rowConstraints0 = new RowConstraints(7);
 
 
         GridPane resolveMatrixGridPane = new GridPane();
-        Label information = new Label();
-        resolveMatrixGridPane.add(information, 1, 1);
-        Label determinantMessage = new Label("No");
-        resolveMatrixGridPane.add(determinantMessage, 1, 2);
-
-
-        resolveMatrixGridPane.add(new Label("Введите точность: "), 1, 4);
-        epsilon.setMaxWidth(100);
-        resolveMatrixGridPane.add(epsilon, 2, 4);
-
-        resolveMatrixGridPane.add(new Label("Диагональ: "), 1, 5);
-        Label diagonalMessage = new Label("");
-        resolveMatrixGridPane.add(diagonalMessage, 2, 5);
-
 
         Button resolveMatrixButton = new Button("Вычислить определитель");
+        StrategyMatrixClient strategyMatrixClient = new StrategyMatrixClient();
         resolveMatrixButton.setOnMouseClicked(mouseEvent -> {
             if (checkDataInMatrix()) {
                 String method = comboBox.getValue();
+
+                TextField[][] copyMatrixTextField = new TextField[25][25];
+                for (int i = 1; i < lengthMatrixX+2; i++) {
+                    for (int j = 1; j < lengthMatrixX+1; j++) {
+                        copyMatrixTextField[i][j] = new TextField(matrixTextField[i][j].getText());
+                    }
+                }
                 switch (method) {
                     case "Гаусса":
-                        information.setText("Определитель матрицы: ");
-                        Gauss<Double> gauss = new Gauss<>(matrixTextField, lengthMatrixX);
-                        gauss.calculate();
-                        gauss.soutMatr();
-                        HashMap<Integer, Double> unknowns = gauss.getUnknowns();
+                        strategyMatrixClient.setMethod(new Gauss(matrixTextField, lengthMatrixX));
+                        double[] unknowns = strategyMatrixClient.findSolution();
                         if (unknowns == null) {
                             determinantMessage.setText("  Не удалось посчитать определитель");
                             determinantMessage.setStyle("-fx-text-fill: red;");
                         } else {
-                            determinantMessage.setText(gauss.getDeterminant());
+                            determinantMessage.setText(String.valueOf(strategyMatrixClient.getDeterminant()));
 
-                            Map<Integer, Double> ordered = new HashMap<>();
-                            int j = -1;
-                            for (int i = unknowns.size() - 1; i >= 0; i--) {
-                                ordered.put(++j, unknowns.get(i));
+
+                            for (int i = 1; i < lengthMatrixX+1; i++) {
+                                answersTextField[i].setText(String.valueOf(unknowns[i]));
                             }
 
-                            ordered.forEach((integer, aDouble) -> answersTextField[integer + 1].setText(aDouble.toString()));
-                            ordered.forEach((integer, aDouble) -> System.out.println(aDouble));
-                            System.out.println();
-                            HashMap<Integer, Double> errors = gauss.getErrors(ordered);
+                            HashMap<Integer, Double> errors = strategyMatrixClient.getErrors(unknowns, copyMatrixTextField);
                             errors.forEach((integer, aDouble) -> errorsTextField[integer + 1].setText(aDouble.toString()));
                         }
                         break;
@@ -154,20 +137,20 @@ public class Lab1Node extends LabsNode {
                     case "Простых итераций":
                         break;
                     case "Гаусса-Зейделя":
-                        information.setText("Число итераций: ");
-                        Zeydel zeydel = new Zeydel(matrixTextField, lengthMatrixX);
+                        strategyMatrixClient.setMethod(new Zeydel(matrixTextField, lengthMatrixX, Double.parseDouble(epsilon.getText())));
                         try {
-                            double[] answers = zeydel.findSolution(Double.parseDouble(epsilon.getText()));
+                            double[] answers = strategyMatrixClient.findSolution();
 
                             for (int i = 0; i < lengthMatrixX; i++) {
                                 answersTextField[i + 1].setText(String.valueOf(answers[i]));
                             }
 
-                            HashMap<Integer, Double> errors = zeydel.getErrors(answers, matrixTextField);
+                            HashMap<Integer, Double> errors = strategyMatrixClient.getErrors(answers, matrixTextField);
                             errors.forEach((integer, aDouble) -> errorsTextField[integer + 1].setText(aDouble.toString()));
 
-                            determinantMessage.setText(String.valueOf(String.valueOf(zeydel.getNumberOfIteration())));
-                            diagonalMessage.setText(zeydel.getDiagonal() ? "Да" : "Нет");
+                            determinantMessage.setText(String.valueOf(String.valueOf(strategyMatrixClient.getNumberOfIteration())));
+                            ZeydelCheckerDiagonal diagonal = new ZeydelCheckerDiagonal();
+                            diagonalMessage.setText(diagonal.getDiagonal(lengthMatrixX, copyMatrixTextField) ? "Да" : "Нет");
                         } catch (NumberFormatException e) {
                             determinantMessage.setText("Не удалось посчитать");
                             determinantMessage.setStyle("-fx-text-fill: red;");
@@ -182,8 +165,8 @@ public class Lab1Node extends LabsNode {
 
         resolveMatrixGridPane.add(resolveMatrixButton, 1, 3);
 
-        resolveMatrixGridPane.getColumnConstraints().addAll(columnConstraints0, columnConstraints1);
-        resolveMatrixGridPane.getRowConstraints().addAll(rowConstraints0, rowConstraints1);
+        resolveMatrixGridPane.getColumnConstraints().addAll(columnConstraints0);
+        resolveMatrixGridPane.getRowConstraints().addAll(rowConstraints0);
 
         return resolveMatrixGridPane;
 
@@ -210,7 +193,7 @@ public class Lab1Node extends LabsNode {
 
     private Node getRandomMatrixData() {
         ColumnConstraints columnConstraints0 = new ColumnConstraints(5);
-        RowConstraints rowConstraints0 = new RowConstraints(15);
+        RowConstraints rowConstraints0 = new RowConstraints(7);
 
 
         GridPane randomMatrixDataGridPane = new GridPane();
@@ -279,23 +262,57 @@ public class Lab1Node extends LabsNode {
         );
         comboBox.getSelectionModel().selectFirst();
 
-        comboBox.valueProperty().addListener((observableValue, s, t1) -> {
-
-            System.out.println(t1);
-        });
 
         ColumnConstraints columnConstraints0 = new ColumnConstraints(5);
         RowConstraints rowConstraints0 = new RowConstraints(7);
 
 
-        GridPane ComboBoxGridPane = new GridPane();
-        ComboBoxGridPane.add(comboBox, 2, 1);
+        GridPane comboBoxGridPane = new GridPane();
+        comboBoxGridPane.add(comboBox, 1, 1);
 
 
-        ComboBoxGridPane.getColumnConstraints().addAll(columnConstraints0);
-        ComboBoxGridPane.getRowConstraints().addAll(rowConstraints0);
+        comboBoxGridPane.getColumnConstraints().addAll(columnConstraints0);
+        comboBoxGridPane.getRowConstraints().addAll(rowConstraints0);
 
-        return ComboBoxGridPane;
+
+        Label information = new Label("Определитель матрицы: ");
+        comboBoxGridPane.add(information, 1, 2);
+        comboBoxGridPane.add(determinantMessage, 2, 2);
+        Label diagonal = new Label("Диагональ: ");
+        Label precision = new Label("Введите точность: ");
+        comboBox.valueProperty().addListener((observableValue, s, t1) -> {
+            try {
+                comboBoxGridPane.getChildren().remove(diagonal);
+                comboBoxGridPane.getChildren().remove(diagonalMessage);
+                comboBoxGridPane.getChildren().remove(precision);
+                comboBoxGridPane.getChildren().remove(epsilon);
+                determinantMessage.setText("");
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+
+            switch (t1) {
+                case "Гаусса":
+                    information.setText("Определитель матрицы: ");
+                    break;
+                case "Гаусса с выбором главного элемента":
+                    break;
+                case "Простых итераций":
+                    break;
+                case "Гаусса-Зейделя":
+                    information.setText("Число итераций: ");
+                    comboBoxGridPane.add(diagonal, 1, 6);
+                    comboBoxGridPane.add(diagonalMessage, 2, 6);
+                    comboBoxGridPane.add(precision, 1, 5);
+                    epsilon.setMaxWidth(100);
+                    comboBoxGridPane.add(epsilon, 2, 5);
+                    break;
+            }
+            System.out.println(t1);
+        });
+
+
+        return comboBoxGridPane;
 
 
     }
