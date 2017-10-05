@@ -9,11 +9,15 @@ class StrategyClient {
         this.node = labsNode;
     }
 
+    StrategyClient() {
+
+    }
+
     Node doDraw() {
         return node.draw();
     }
 
-    public void setConcreteNode(LabsNode node) {
+    void setConcreteNode(LabsNode node) {
         this.node = node;
     }
 

@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.integration.view.IntegrationNode;
 import GUI.lab1.Lab1Node;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -33,7 +34,7 @@ public class MainWindow extends Application {
 
     private List<Button> setButtons(FlowPane rootFlowPane) {
         List<Button> buttonList = new ArrayList<>();
-        StrategyClient strategyClient = new StrategyClient(new Lab1Node());
+        StrategyClient strategyClient = new StrategyClient();
 
         //Height = 25
         Button buttonLab1 = new Button("lab_1");
@@ -44,6 +45,7 @@ public class MainWindow extends Application {
             } catch (Exception e) {
 //                e.printStackTrace();
             }
+            strategyClient.setConcreteNode(new Lab1Node());
             rootFlowPane.getChildren().add(strategyClient.doDraw());
         });
         buttonList.add(buttonLab1);
@@ -51,6 +53,15 @@ public class MainWindow extends Application {
 
         Button buttonLab2 = new Button("lab_2");
         buttonLab2.setPrefWidth(240);
+        buttonLab2.setOnMouseClicked(keyEvent -> {
+            try {
+                rootFlowPane.getChildren().remove(5);
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+            strategyClient.setConcreteNode(new IntegrationNode());
+            rootFlowPane.getChildren().add(strategyClient.doDraw());
+        });
         buttonList.add(buttonLab2);
 
 
