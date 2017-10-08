@@ -3,18 +3,23 @@ package GUI;
 import GUI.integration.view.IntegrationNode;
 import GUI.lab1.Lab1Node;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by slavik on 08.09.17.
  */
 public class MainWindow extends Application {
+
+    private Map<String, Node> nodes = new HashMap<>();
 
     public static void main(String[] args) {
         launch(args);
@@ -45,8 +50,15 @@ public class MainWindow extends Application {
             } catch (Exception e) {
 //                e.printStackTrace();
             }
-            strategyClient.setConcreteNode(new Lab1Node());
-            rootFlowPane.getChildren().add(strategyClient.doDraw());
+
+            if (nodes.containsKey("1")) {
+                rootFlowPane.getChildren().add(nodes.get("1"));
+            } else {
+                strategyClient.setConcreteNode(new Lab1Node());
+                Node node = strategyClient.doDraw();
+                rootFlowPane.getChildren().add(node);
+                nodes.put("1", node);
+            }
         });
         buttonList.add(buttonLab1);
 
@@ -59,8 +71,15 @@ public class MainWindow extends Application {
             } catch (Exception e) {
 //                e.printStackTrace();
             }
-            strategyClient.setConcreteNode(new IntegrationNode());
-            rootFlowPane.getChildren().add(strategyClient.doDraw());
+
+            if (nodes.containsKey("2")) {
+                rootFlowPane.getChildren().add(nodes.get("2"));
+            } else {
+                strategyClient.setConcreteNode(new IntegrationNode());
+                Node node = strategyClient.doDraw();
+                rootFlowPane.getChildren().add(node);
+                nodes.put("2", node);
+            }
         });
         buttonList.add(buttonLab2);
 
