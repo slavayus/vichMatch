@@ -12,6 +12,12 @@ import javafx.scene.control.TextField;
 
 public class Controller {
     @FXML
+    public Label errorMiddle;
+
+    @FXML
+    public Label errorRight;
+
+    @FXML
     private ComboBox<String> variantComboBox;
 
     @FXML
@@ -87,6 +93,8 @@ public class Controller {
         middleIntegration.setText(String.valueOf(integrationStrategyClient.getMethod().getMiddleIntegration()));
         rightIntegration.setText(String.valueOf(integrationStrategyClient.getMethod().getRightIntegration()));
         numberOfSplit.setText(String.valueOf(integrationStrategyClient.getMethod().getNumberOfSplit()));
-        error.setText(String.valueOf(integrationStrategyClient.getMethod().getNumberOfError()));
+        error.setText(String.valueOf(integrationStrategyClient.getMethod().getNumberOfErrorLeft()));
+        errorMiddle.setText(String.valueOf(integrationStrategyClient.getMethod().getNumberOfErrorMiddle()));
+        errorRight.setText(String.valueOf(integrationStrategyClient.getMethod().getNumberOfErrorRight()));
     }
 }

@@ -9,7 +9,11 @@ public interface IntegrationStrategy {
 
     int getNumberOfSplit();
 
-    float getNumberOfError();
+    float getNumberOfErrorLeft();
+
+    float getNumberOfErrorRight();
+
+    float getNumberOfErrorMiddle();
 
     void calc(int intDataFromTextFieldA, int intDataFromTextFieldB, double doubleEpsilon, String function);
 }

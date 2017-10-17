@@ -9,7 +9,9 @@ public class Rectangle implements IntegrationStrategy {
     private float middleIntegration;
     private float rightIntegration;
     private int numberOfSplit;
-    private float numberOfError;
+    private float numberOfErrorLeft;
+    private float numberOfErrorRight;
+    private float numberOfErrorMiddle;
 
     @Override
     public float getLeftIntegration() {
@@ -32,8 +34,18 @@ public class Rectangle implements IntegrationStrategy {
     }
 
     @Override
-    public float getNumberOfError() {
-        return this.numberOfError;
+    public float getNumberOfErrorLeft() {
+        return this.numberOfErrorLeft;
+    }
+
+    @Override
+    public float getNumberOfErrorRight() {
+        return numberOfErrorRight;
+    }
+
+    @Override
+    public float getNumberOfErrorMiddle() {
+        return numberOfErrorMiddle;
     }
 
     @Override
@@ -67,6 +79,9 @@ public class Rectangle implements IntegrationStrategy {
         rightIntegration = functionStrategy.getMethod().getRightIntegration();
         middleIntegration = functionStrategy.getMethod().getMiddleIntegration();
         numberOfSplit = functionStrategy.getMethod().getNumberOfSplit();
-        numberOfError = functionStrategy.getMethod().getNumberOfError();
+        numberOfErrorLeft = functionStrategy.getMethod().getNumberOfErrorLeft();
+        numberOfErrorRight = functionStrategy.getMethod().getNumberOfErrorRight();
+        numberOfErrorMiddle = functionStrategy.getMethod().getNumberOfErrorMiddle();
+
     }
 }

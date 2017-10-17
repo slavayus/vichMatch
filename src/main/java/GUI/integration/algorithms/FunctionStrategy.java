@@ -7,7 +7,9 @@ public abstract class FunctionStrategy {
     protected float middleIntegration;
     protected float rightIntegration;
     protected int numberOfSplit;
-    private float numberOfError;
+    private float numberOfErrorLeft;
+    private float numberOfErrorRight;
+    private float numberOfErrorMiddle;
 
     float getLeftIntegration() {
         return this.leftIntegration;
@@ -25,8 +27,16 @@ public abstract class FunctionStrategy {
         return this.numberOfSplit;
     }
 
-    float getNumberOfError() {
-        return this.numberOfError;
+    float getNumberOfErrorLeft() {
+        return this.numberOfErrorLeft;
+    }
+
+    float getNumberOfErrorRight() {
+        return numberOfErrorRight;
+    }
+
+    float getNumberOfErrorMiddle() {
+        return numberOfErrorMiddle;
     }
 
     void calc(int intDataFromTextFieldA, int intDataFromTextFieldB, double doubleEpsilon) {
@@ -56,10 +66,14 @@ public abstract class FunctionStrategy {
         int cacheNumberOfSplit = numberOfSplit;
 
         leftIntegration = 0;
+        rightIntegration = 0;
+        middleIntegration = 0;
 
         integrate(intDataFromTextFieldA, intDataFromTextFieldB, epsilon);
 
-        numberOfError = 1f / 3f * abs(leftIntegration - cacheLeftIntegration);
+        numberOfErrorLeft = 1f / 3f * abs(leftIntegration - cacheLeftIntegration);
+        numberOfErrorMiddle = 1f / 3f * abs(middleIntegration - cacheMiddleIntegration);
+        numberOfErrorRight = 1f / 3f * abs(rightIntegration - cacheRightIntegration);
 
         leftIntegration = cacheLeftIntegration;
         middleIntegration = cacheMiddleIntegration;
@@ -68,4 +82,5 @@ public abstract class FunctionStrategy {
     }
 
     protected abstract void integrate(int intDataFromTextFieldA, int intDataFromTextFieldB, double doubleEpsilon);
+
 }
