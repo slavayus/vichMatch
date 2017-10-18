@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800"
+      prefWidth="1200" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="GUI.approximation.controller.ApproximationController">
+
+    <VBox>
+        <LineChart fx:id="sinChart" alternativeColumnFillVisible="true" title="y = sin(x)" legendVisible="false"
+                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
+                   createSymbols="false" prefHeight="300">
+            <xAxis>
+                <CategoryAxis label="X" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Y" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+
+        <LineChart fx:id="tenPointsChart" alternativeColumnFillVisible="true" title="Ten Points" legendVisible="false"
+                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
+                   createSymbols="false" prefHeight="300">
+            <xAxis>
+                <CategoryAxis label="X" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Y" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+
+    </VBox>
+
+
+    <VBox>
+        <LineChart fx:id="fourPointsChart" alternativeColumnFillVisible="true" title="Four Points" legendVisible="false"
+                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
+                   createSymbols="false" prefHeight="300">
+            <xAxis>
+                <CategoryAxis label="X" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Y" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+    </VBox>
+</HBox>

@@ -1,5 +1,6 @@
 package GUI;
 
+import GUI.approximation.view.ApproximationNode;
 import GUI.integration.view.IntegrationNode;
 import GUI.lab1.Lab1Node;
 import javafx.application.Application;
@@ -86,6 +87,22 @@ public class MainWindow extends Application {
 
         Button buttonLab3 = new Button("lab_3");
         buttonLab3.setPrefWidth(240);
+        buttonLab3.setOnMouseClicked(keyEvent -> {
+            try {
+                rootFlowPane.getChildren().remove(5);
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+
+            if (nodes.containsKey("3")) {
+                rootFlowPane.getChildren().add(nodes.get("3"));
+            } else {
+                strategyClient.setConcreteNode(new ApproximationNode());
+                Node node = strategyClient.doDraw();
+                rootFlowPane.getChildren().add(node);
+                nodes.put("3", node);
+            }
+        });
         buttonList.add(buttonLab3);
 
 
