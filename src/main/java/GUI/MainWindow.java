@@ -31,14 +31,16 @@ public class MainWindow extends Application {
         FlowPane rootFlowPane = new FlowPane();
 
 
-        rootFlowPane.getChildren().addAll(setButtons(rootFlowPane));
-        primaryStage.setScene(new Scene(rootFlowPane, 1200, 800));
+        Scene scene = new Scene(rootFlowPane, 1200, 800);
+
+        rootFlowPane.getChildren().addAll(setButtons(rootFlowPane, scene));
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 
 
-    private List<Button> setButtons(FlowPane rootFlowPane) {
+    private List<Button> setButtons(FlowPane rootFlowPane, Scene scene) {
         List<Button> buttonList = new ArrayList<>();
         StrategyClient strategyClient = new StrategyClient();
 
@@ -88,6 +90,7 @@ public class MainWindow extends Application {
         Button buttonLab3 = new Button("lab_3");
         buttonLab3.setPrefWidth(240);
         buttonLab3.setOnMouseClicked(keyEvent -> {
+            scene.getStylesheets().add(MainWindow.class.getResource("/GUI/approximation/css/chart.css").toExternalForm());
             try {
                 rootFlowPane.getChildren().remove(5);
             } catch (Exception e) {

@@ -10,7 +10,7 @@
     <VBox>
         <LineChart fx:id="sinChart" alternativeColumnFillVisible="true" title="y = sin(x)" legendVisible="false"
                    horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
-                   createSymbols="false" prefHeight="300">
+                   prefHeight="300">
             <xAxis>
                 <CategoryAxis label="X" side="BOTTOM"/>
             </xAxis>
@@ -21,7 +21,7 @@
 
         <LineChart fx:id="tenPointsChart" alternativeColumnFillVisible="true" title="Ten Points" legendVisible="false"
                    horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
-                   createSymbols="false" prefHeight="300">
+                   prefHeight="300">
             <xAxis>
                 <CategoryAxis label="X" side="BOTTOM"/>
             </xAxis>
@@ -36,7 +36,18 @@
     <VBox>
         <LineChart fx:id="fourPointsChart" alternativeColumnFillVisible="true" title="Four Points" legendVisible="false"
                    horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
-                   createSymbols="false" prefHeight="300">
+                   prefHeight="300">
+            <xAxis>
+                <CategoryAxis label="X" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Y" side="LEFT"/>
+            </yAxis>
+        </LineChart>
+        <LineChart fx:id="tenPointsWithOneErrorChart" title="Ten Points With One Error"
+                   legendVisible="false"
+                   horizontalGridLinesVisible="false" verticalGridLinesVisible="false"
+                   prefHeight="300">
             <xAxis>
                 <CategoryAxis label="X" side="BOTTOM"/>
             </xAxis>

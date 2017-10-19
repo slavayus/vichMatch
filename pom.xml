@@ -34,6 +34,13 @@
                     <include>*.fxml</include>
                 </includes>
             </resource>
+        <resource>
+                <directory>src/main/java/GUI/approximation/css/</directory>
+                <targetPath>GUI/approximation/css</targetPath>
+                <includes>
+                    <include>*.css</include>
+                </includes>
+            </resource>
         </resources>
     </build>
     <dependencies>

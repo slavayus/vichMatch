@@ -1,9 +1,5 @@
 package GUI.approximation.algorithms;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.chart.XYChart;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,6 +14,10 @@ public abstract class ApproximationStrategy {
     private double[] b;
     double[] x;
     double[] y;
+    Map<String, Double> functionPoints = new LinkedHashMap<>();
+
+    ApproximationStrategy() {
+    }
 
     ApproximationStrategy(int numberOfPoints) {
         this.numberOfPoints = numberOfPoints;
@@ -31,8 +31,6 @@ public abstract class ApproximationStrategy {
         this.x = new double[numberOfPoints + 1];
         this.y = new double[numberOfPoints + 1];
     }
-
-    Map<String, Double> points = new LinkedHashMap<>();
 
 
     protected abstract void initializePoints();
@@ -71,7 +69,7 @@ public abstract class ApproximationStrategy {
     private void calcPoints() {
         for (int i = 1; i <= numberOfPoints; i++) {
             for (double j = x[i - 1]; j <= x[i]; j += 0.1) {
-                points.put(String.format("%.2f", j), getCubFunctionResult(i, j - x[i]));
+                functionPoints.put(String.format("%.2f", j), getCubFunctionResult(i, j - x[i]));
 
             }
         }
@@ -90,15 +88,16 @@ public abstract class ApproximationStrategy {
         }
     }
 
-
-    public XYChart.Series<String, Double> getDataAsXYChart() {
-        XYChart.Series<String, Double> series = new XYChart.Series<>();
-
-        ObservableList<XYChart.Data<String, Double>> listPoints = FXCollections.observableArrayList();
-        points.forEach((s, aDouble) -> listPoints.add(new XYChart.Data<>(s, aDouble)));
-
-        series.getData().addAll(listPoints);
-        return series;
+    public Map<String, Double> getFunctionPoints() {
+        return functionPoints;
     }
 
+    public Map<String, Double> getXYAsMap() {
+        LinkedHashMap<String, Double> xyMap = new LinkedHashMap<>();
+        for (int i = 0; i < numberOfPoints; i++) {
+            xyMap.put(String.format("%.2f", x[i]), y[i]);
+        }
+
+        return xyMap;
+    }
 }
