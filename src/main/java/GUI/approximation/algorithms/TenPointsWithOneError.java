@@ -8,27 +8,27 @@ public class TenPointsWithOneError extends ApproximationStrategy {
 
     @Override
     protected void initializePoints() {
-        x[0] = 0.7;
-        x[1] = 0.9;
-        x[2] = 1.3;
-        x[3] = 1.6;
-        x[4] = 2.1;
-        x[5] = 2.9;
-        x[6] = 3.5;
-        x[7] = 4.2;
-        x[8] = 5.5;
-        x[9] = 6.2;
+        coordinateX[0] = 0.7;
+        coordinateX[1] = 0.9;
+        coordinateX[2] = 1.3;
+        coordinateX[3] = 1.6;
+        coordinateX[4] = 2.1;
+        coordinateX[5] = 2.9;
+        coordinateX[6] = 3.5;
+        coordinateX[7] = 4.2;
+        coordinateX[8] = 5.5;
+        coordinateX[9] = 6.2;
 
-        y[0] = 0.644;
-        y[1] = 0.783;
-        y[2] = 0.963;
-        y[3] = 0.999;
-        y[4] = 1.2;
-        y[5] = 0.239;
-        y[6] = -0.35;
-        y[7] = -0.87;
-        y[8] = -0.705;
-        y[9] = -0.08;
+        coordinateY[0] = 0.644;
+        coordinateY[1] = 0.783;
+        coordinateY[2] = 0.963;
+        coordinateY[3] = 0.999;
+        coordinateY[4] = 1.2;
+        coordinateY[5] = 0.239;
+        coordinateY[6] = -0.35;
+        coordinateY[7] = -0.87;
+        coordinateY[8] = -0.705;
+        coordinateY[9] = -0.08;
 
     }
 }
