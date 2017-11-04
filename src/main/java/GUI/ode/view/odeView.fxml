@@ -196,7 +196,7 @@
     </Label>
 
     <LineChart fx:id="functionLineChart" horizontalGridLinesVisible="false" legendVisible="false"
-               prefHeight="300" title="x - y" verticalGridLinesVisible="false">
+               minHeight="500" minWidth="1000" title="x - y" verticalGridLinesVisible="false">
         <xAxis>
             <CategoryAxis label="X" side="BOTTOM"/>
         </xAxis>

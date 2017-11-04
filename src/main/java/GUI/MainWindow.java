@@ -113,6 +113,7 @@ public class MainWindow extends Application {
         Button buttonLab4 = new Button("lab_4");
         buttonLab4.setPrefWidth(240);
         buttonLab4.setOnMouseClicked(mouseEvent -> {
+            scene.getStylesheets().add(MainWindow.class.getResource("/GUI/approximation/css/chart.css").toExternalForm());
             try {
                 rootFlowPane.getChildren().remove(5);
             } catch (Exception e) {

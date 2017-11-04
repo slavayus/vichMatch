@@ -59,6 +59,7 @@ public class OdeController {
 
         List<Double> xCoordinates = odeStrategy.getXCoordinates();
         List<Double> yCoordinates = odeStrategy.getYCoordinates();
+        functionLineChart.getData().clear();
         functionLineChart.getData().add(transferDataToXYChart(xCoordinates, yCoordinates));
 
     }
