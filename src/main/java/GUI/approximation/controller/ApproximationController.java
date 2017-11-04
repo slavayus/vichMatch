@@ -3,12 +3,16 @@ package GUI.approximation.controller;
 import GUI.approximation.algorithms.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.util.List;
 import java.util.Map;
 
 public class ApproximationController {
@@ -30,6 +34,8 @@ public class ApproximationController {
 
     @FXML
     public GridPane sinGridPane;
+    public TextField userPointTextField;
+    public Button userPointButton;
 
     @FXML
     private LineChart<String, Double> sinChart;
@@ -89,5 +95,36 @@ public class ApproximationController {
 
         series.getData().addAll(listPoints);
         return series;
+    }
+
+
+    private Label fourPointsLabel = new Label();
+    private Label tenPointsLabel = new Label();
+    private Label tenPointsWithOneErrorLabel = new Label();
+
+    public void calculateUserPoint() {
+        try {
+            ApproximationStrategy strategy = new FourPointsFunction();
+            strategy.calc();
+            Double userPoint = strategy.getUserCalculatedPoint(Double.parseDouble(userPointTextField.getText()));
+            fourPointsLabel.setText(String.valueOf(userPoint));
+            sinGridPane.add(fourPointsLabel, 0, 1);
+
+            strategy = new TenPointsFunction();
+            strategy.calc();
+            userPoint = strategy.getUserCalculatedPoint(Double.parseDouble(userPointTextField.getText()));
+            tenPointsLabel.setText(String.valueOf(userPoint));
+            sinGridPane.add(tenPointsLabel, 1, 1);
+
+            strategy = new TenPointsWithOneError();
+            strategy.calc();
+            userPoint = strategy.getUserCalculatedPoint(Double.parseDouble(userPointTextField.getText()));
+            tenPointsWithOneErrorLabel.setText(String.valueOf(userPoint));
+            sinGridPane.add(tenPointsWithOneErrorLabel, 2, 1);
+        } catch (NumberFormatException e) {
+            //Do nothing
+        }
+
+
     }
 }

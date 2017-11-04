@@ -1,6 +1,8 @@
 package GUI.approximation.algorithms;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ApproximationStrategy {
@@ -111,5 +113,16 @@ public abstract class ApproximationStrategy {
 
     public double[] getCoordinateY() {
         return coordinateY;
+    }
+
+    public Double getUserCalculatedPoint(double v) {
+        for (int i = 1; i <= numberOfPoints; i++) {
+            for (double j = coordinateX[i - 1]; j <= coordinateX[i]; j += 0.1) {
+                if (Math.abs(j - v)<0.01) {
+                    return getCubFunctionResult(i, j - coordinateX[i]);
+                }
+            }
+        }
+        return null;
     }
 }

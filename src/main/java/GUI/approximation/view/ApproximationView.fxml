@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800"
       prefWidth="1200" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="GUI.approximation.controller.ApproximationController">
@@ -30,9 +32,6 @@
                     <Insets left="70"/>
                 </VBox.margin>
                 <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0"/>
@@ -80,7 +79,11 @@
             </GridPane>
 
         </VBox>
-
+        <VBox>
+            <TextField fx:id="userPointTextField" text="3"/>
+            <Button fx:id="userPointButton" onAction="#calculateUserPoint" prefWidth="100" text="Вычислить"
+                    GridPane.columnIndex="3" GridPane.columnSpan="1"/>
+        </VBox>
 
     </VBox>
 
