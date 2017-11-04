@@ -189,6 +189,12 @@
         <alignment>center</alignment>
     </HBox>
 
+    <Label fx:id="errorLabel">
+        <VBox.margin>
+            <Insets left="12.0"/>
+        </VBox.margin>
+    </Label>
+
     <LineChart fx:id="functionLineChart" horizontalGridLinesVisible="false" legendVisible="false"
                prefHeight="300" title="x - y" verticalGridLinesVisible="false">
         <xAxis>
