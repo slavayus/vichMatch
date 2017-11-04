@@ -3,6 +3,7 @@ package GUI;
 import GUI.approximation.view.ApproximationNode;
 import GUI.integration.view.IntegrationNode;
 import GUI.lab1.Lab1Node;
+import GUI.ode.view.OdeNode;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -111,6 +112,23 @@ public class MainWindow extends Application {
 
         Button buttonLab4 = new Button("lab_4");
         buttonLab4.setPrefWidth(240);
+        buttonLab4.setOnMouseClicked(mouseEvent -> {
+            try {
+                rootFlowPane.getChildren().remove(5);
+            } catch (Exception e) {
+//                e.printStackTrace();
+            }
+
+            if (nodes.containsKey("4")) {
+                rootFlowPane.getChildren().add(nodes.get("4"));
+            } else {
+                strategyClient.setConcreteNode(new OdeNode());
+                Node node = strategyClient.doDraw();
+                rootFlowPane.getChildren().add(node);
+                nodes.put("4", node);
+            }
+
+        });
         buttonList.add(buttonLab4);
 
 

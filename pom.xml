@@ -27,6 +27,7 @@
                     <include>*.fxml</include>
                 </includes>
             </resource>
+
             <resource>
                 <directory>src/main/java/GUI/approximation/view/</directory>
                 <targetPath>GUI/approximation/view</targetPath>
@@ -41,6 +42,15 @@
                     <include>*.css</include>
                 </includes>
             </resource>
+
+            <resource>
+                <directory>src/main/java/GUI/ode/view/</directory>
+                <targetPath>GUI/ode/view</targetPath>
+                <includes>
+                    <include>*.fxml</include>
+                </includes>
+            </resource>
+
         </resources>
     </build>
     <dependencies>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.control.Button?>
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="GUI.ode.controller.OdeController">
+
+    <HBox>
+        <VBox.margin>
+            <Insets left="12.0" top="10.0"/>
+        </VBox.margin>
+        <Label depthTest="ENABLE" text="Функция: "/>
+        <ImageView pickOnBounds="true" preserveRatio="true">
+            <Image url="/ode/OdeFunction.png"/>
+        </ImageView>
+        <alignment>center_left</alignment>
+    </HBox>
+
+    <VBox.margin>
+        <Insets left="12.0"/>
+    </VBox.margin>
+
+    <HBox>
+        <HBox prefWidth="75">
+            <HBox.margin>
+                <Insets bottom="10"/>
+            </HBox.margin>
+            <alignment>center</alignment>
+            <Label text="x">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+            <VBox>
+                <Label text=" ">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+                <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" text="0">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+            </VBox>
+            <Label text=" = ">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox>
+            <TextField fx:id="textFieldXStart" prefHeight="26.0" prefWidth="100.0" text="0"/>
+        </HBox>
+    </HBox>
+
+    <HBox>
+        <HBox prefWidth="75">
+            <HBox.margin>
+                <Insets bottom="10"/>
+            </HBox.margin>
+            <alignment>center</alignment>
+            <Label text="x">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+            <VBox>
+                <Label text=" ">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+                <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" text="n">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+            </VBox>
+            <Label text=" = ">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox>
+            <TextField fx:id="textFieldXFinish" prefHeight="26.0" prefWidth="100.0" text="10"/>
+        </HBox>
+    </HBox>
+
+    <HBox>
+        <HBox prefWidth="75">
+            <HBox.margin>
+                <Insets bottom="10"/>
+            </HBox.margin>
+            <alignment>center</alignment>
+            <Label text="шаг = ">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox>
+            <TextField fx:id="textFieldStep" prefHeight="26.0" prefWidth="100.0" text="0.1"/>
+        </HBox>
+    </HBox>
+
+    <HBox>
+        <HBox prefWidth="75">
+            <HBox.margin>
+                <Insets bottom="10"/>
+            </HBox.margin>
+            <alignment>center</alignment>
+            <Label text="y">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+            <VBox>
+                <Label text=" ">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+                <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" text="0">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+            </VBox>
+            <Label text=" = ">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox>
+            <TextField fx:id="textFieldYZero" prefHeight="26.0" prefWidth="100.0" text="0"/>
+        </HBox>
+    </HBox>
+
+    <HBox>
+        <HBox prefWidth="75">
+            <HBox.margin>
+                <Insets bottom="10"/>
+            </HBox.margin>
+            <alignment>center</alignment>
+            <Label text="y">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+            <VBox>
+                <Label text=" ">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+                <Label alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" text="1">
+                    <font>
+                        <Font size="8.0"/>
+                    </font>
+                </Label>
+            </VBox>
+            <Label text=" = ">
+                <font>
+                    <Font size="15.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox>
+            <TextField fx:id="textFieldYFirst" prefHeight="26.0" prefWidth="100.0" text="0.004"/>
+        </HBox>
+    </HBox>
+
+    <HBox maxWidth="187">
+        <Button onAction="#calculateButton" prefWidth="100" text="Вычислить"/>
+        <alignment>center</alignment>
+    </HBox>
+
+    <LineChart fx:id="functionLineChart" horizontalGridLinesVisible="false" legendVisible="false"
+               prefHeight="300" title="x - y" verticalGridLinesVisible="false">
+        <xAxis>
+            <CategoryAxis label="X" side="BOTTOM"/>
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Y" side="LEFT"/>
+        </yAxis>
+    </LineChart>
+</VBox>
